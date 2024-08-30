@@ -10,7 +10,6 @@ const Hand = ({ cards }) => {
                     {card.type === "pair" ? (
                         <div className={styles.pairCard}>
                             <span>{card.number}</span>
-                            <span>Valeur: {card.value}</span>
                         </div>
                     ) : (
                         <span>{card.number}</span>

@@ -1,7 +1,29 @@
 .card {
-    background: rgba(0, 0, 0, 0.5);
+    width: 100px;
+    height: 150px;
+    border: 2px solid transparent;
+    background: darkgray;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
 
-    padding: 1em;
+.borderRed {
+    border-color: red;
+}
 
-    border-radius: 6px;
+.borderBlue {
+    border-color: blue;
+}
+
+.revealed {
+    background-color: white;
+}
+
+.emptySpace {
+    width: 100px;
+    height: 150px;
+    background-color: transparent;
 }
