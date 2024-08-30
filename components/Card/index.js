@@ -3,22 +3,24 @@ import styles from "@/styles/components/card.module.scss";
 import useDeckStore from "@/stores/deckStore";
 
 const Card = ({ card }) => {
-    const { flipCard } = useDeckStore();
-    const show = card.revealed;
+    const flipCard = useDeckStore((state) => state.flipCard);
 
     const handleClick = () => {
-        if (!show) {
-            flipCard(card.id);
-        }
+        flipCard(card.id);
     };
+
+    if (card.removed) {
+        return <div className={styles.emptySpace}></div>; // Affiche un espace vide si la carte est retirée
+    }
 
     return (
         <div
-            className={`${styles.card} ${show ? styles.revealed : ""}`}
+            className={`${styles.card} ${card.revealed ? styles.revealed : ""}`}
             onClick={handleClick}
-            aria-pressed={show}
         >
-            {show && <span className={styles.cardContent}>{card.number}</span>}
+            {card.revealed && (
+                <span className={styles.cardContent}>{card.number}</span>
+            )}
         </div>
     );
 };

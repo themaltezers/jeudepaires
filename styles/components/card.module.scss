@@ -5,3 +5,8 @@
 
     border-radius: 6px;
 }
+.emptySpace {
+    width: 100px; // Ajustez en fonction de la taille de vos cartes
+    height: 150px; // Ajustez en fonction de la taille de vos cartes
+    background-color: transparent; // Pour s'assurer que l'espace est bien visible
+}

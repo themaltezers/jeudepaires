@@ -10,6 +10,14 @@ const shuffleArray = (array) => {
     return array;
 };
 
+const createPairCard = (firstCard, secondCard) => ({
+    id: `${firstCard.id}-${secondCard.id}`, // Identifiant unique pour la paire
+    type: "pair", // Indicateur que c'est une carte de paire
+    number: `${firstCard.number}`, // Numéros des cartes associées
+    value: firstCard.value, // Valeur combinée des deux cartes
+    cards: firstCard, // Référence aux cartes originales
+});
+
 //Decks
 const cards = [
     { id: 0, number: "Vt", value: 5, revealed: false },
@@ -44,7 +52,7 @@ const shuffledCards = shuffleArray([...cards]);
 
 //Store du deck
 const useDeckStore = create((set, get) => ({
-    cards: shuffledCards,
+    cards: shuffleArray([...cards]),
     flippedCards: [],
 
     flipCard: (id) => {
@@ -53,7 +61,7 @@ const useDeckStore = create((set, get) => ({
         const { currentPlayer, addToPlayerHand, switchPlayer } =
             usePlayerStore.getState();
 
-        if (!card.revealed && flippedCards.length < 2) {
+        if (!card.revealed && flippedCards.length < 2 && !card.removed) {
             set((state) => ({
                 cards: state.cards.map((card) =>
                     card.id === id ? { ...card, revealed: true } : card
@@ -68,9 +76,19 @@ const useDeckStore = create((set, get) => ({
                     const secondCard = cards.find((c) => c.id === secondCardId);
 
                     if (firstCard.number === secondCard.number) {
-                        // Ajouter les cartes à la main du joueur actuel
-                        addToPlayerHand(currentPlayer, firstCard);
-                        addToPlayerHand(currentPlayer, secondCard);
+                        // Créer une carte de paire et ajouter à la main du joueur
+                        const pairCard = createPairCard(firstCard, secondCard);
+                        addToPlayerHand(currentPlayer, pairCard);
+
+                        // Marquer les cartes comme retirées
+                        set((state) => ({
+                            cards: state.cards.map((card) =>
+                                card.id === firstCardId ||
+                                card.id === secondCardId
+                                    ? { ...card, removed: true }
+                                    : card
+                            ),
+                        }));
                     } else {
                         // Retourner les cartes si elles ne correspondent pas
                         set((state) => ({
@@ -96,8 +114,13 @@ const useDeckStore = create((set, get) => ({
 
     resetCards: () =>
         set((state) => ({
-            cards: state.cards.map((card) => ({ ...card, revealed: false })),
+            cards: state.cards.map((card) => ({
+                ...card,
+                revealed: false,
+                removed: false,
+            })),
             flippedCards: [],
         })),
 }));
+
 export default useDeckStore;
