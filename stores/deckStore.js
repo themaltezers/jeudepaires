@@ -10,15 +10,16 @@ const shuffleArray = (array) => {
     return array;
 };
 
+// Fonction pour créer une carte de paire
 const createPairCard = (firstCard, secondCard) => ({
     id: `${firstCard.id}-${secondCard.id}`, // Identifiant unique pour la paire
     type: "pair", // Indicateur que c'est une carte de paire
     number: `${firstCard.number}`, // Numéros des cartes associées
-    value: firstCard.value, // Valeur combinée des deux cartes
-    cards: firstCard, // Référence aux cartes originales
+    value: firstCard.value + secondCard.value, // Valeur combinée des deux cartes
+    cards: [firstCard, secondCard], // Référence aux cartes originales
 });
 
-//Decks
+// Decks
 const cards = [
     {
         id: 0,
@@ -151,41 +152,41 @@ const cards = [
     {
         id: 16,
         number: "change",
-        effect: ["change", "changeR"],
+        value: 0,
         revealed: false,
         removed: false,
         selectedBy: null,
+        isSingle: true,
     },
     {
         id: 17,
         number: "vol",
-        effect: ["vol", "volR"],
+        value: 0,
         revealed: false,
         removed: false,
         selectedBy: null,
+        isSingle: true,
     },
     {
         id: 18,
         number: "garde",
-        effect: ["garde", "gardeR"],
+        value: 0,
         revealed: false,
         removed: false,
         selectedBy: null,
+        isSingle: true,
     },
     {
         id: 19,
         number: "voit",
-        effect: ["voit", "voitR"],
+        value: 0,
         revealed: false,
         removed: false,
         selectedBy: null,
+        isSingle: true,
     },
 ];
 
-//Mélange les cartes
-const shuffledCards = shuffleArray([...cards]);
-
-//Store du deck
 const useDeckStore = create((set, get) => ({
     cards: shuffleArray([...cards]),
     flippedCards: [],
@@ -206,11 +207,44 @@ const useDeckStore = create((set, get) => ({
                 flippedCards: [...state.flippedCards, id],
             }));
 
+            if (card.isSingle) {
+                // La carte est unique, elle arrête le tour immédiatement
+                setTimeout(() => {
+                    // Réinitialiser toutes les cartes révélées
+                    set((state) => ({
+                        cards: state.cards.map((card) =>
+                            card.revealed && !card.removed
+                                ? { ...card, revealed: false, selectedBy: null }
+                                : card
+                        ),
+                    }));
+
+                    // Retirer la carte unique
+                    set((state) => ({
+                        cards: state.cards.map((card) =>
+                            card.id === id ? { ...card, removed: true } : card
+                        ),
+                    }));
+
+                    addToPlayerHand(currentPlayer, card);
+                    get().resetFlippedCards();
+                    switchPlayer(); // Passer immédiatement au joueur suivant
+                }, 1000);
+                return;
+            }
+
             if (get().flippedCards.length === 2) {
                 setTimeout(() => {
                     const [firstCardId, secondCardId] = get().flippedCards;
                     const firstCard = cards.find((c) => c.id === firstCardId);
                     const secondCard = cards.find((c) => c.id === secondCardId);
+
+                    // Vérification de l'existence de firstCard et secondCard avant de continuer
+                    if (!firstCard || !secondCard) {
+                        get().resetFlippedCards();
+                        switchPlayer();
+                        return;
+                    }
 
                     if (firstCard.number === secondCard.number) {
                         // Créer une carte de paire et ajouter à la main du joueur
@@ -226,6 +260,8 @@ const useDeckStore = create((set, get) => ({
                                     : card
                             ),
                         }));
+
+                        // Ne pas changer de joueur, laisser le joueur continuer à jouer
                     } else {
                         // Retourner les cartes si elles ne correspondent pas
                         set((state) => ({
@@ -240,10 +276,12 @@ const useDeckStore = create((set, get) => ({
                                     : card
                             ),
                         }));
+
+                        // Passer au joueur suivant
+                        switchPlayer();
                     }
 
                     get().resetFlippedCards();
-                    switchPlayer(); // Passer au joueur suivant
                 }, 1000);
             }
         }
