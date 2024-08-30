@@ -9,13 +9,23 @@ const Card = ({ card }) => {
         flipCard(card.id);
     };
 
+    // Appliquer une bordure différente en fonction du joueur qui a sélectionné la carte
+    const borderColorClass =
+        card.selectedBy === 1
+            ? styles.borderRed
+            : card.selectedBy === 2
+            ? styles.borderBlue
+            : "";
+
     if (card.removed) {
         return <div className={styles.emptySpace}></div>; // Affiche un espace vide si la carte est retirée
     }
 
     return (
         <div
-            className={`${styles.card} ${card.revealed ? styles.revealed : ""}`}
+            className={`${styles.card} ${
+                card.revealed ? styles.revealed : ""
+            } ${borderColorClass}`}
             onClick={handleClick}
         >
             {card.revealed && (

@@ -20,31 +20,166 @@ const createPairCard = (firstCard, secondCard) => ({
 
 //Decks
 const cards = [
-    { id: 0, number: "Vt", value: 5, revealed: false },
-    { id: 1, number: "Dt", value: 10, revealed: false },
-    { id: 2, number: "Rt", value: 15, revealed: false },
-    { id: 3, number: "At", value: 20, revealed: false },
-    { id: 4, number: "Vc", value: 5, revealed: false },
-    { id: 5, number: "Dc", value: 10, revealed: false },
-    { id: 6, number: "Rc", value: 15, revealed: false },
-    { id: 7, number: "Ac", value: 20, revealed: false },
-    { id: 8, number: "Vt", value: 5, revealed: false },
-    { id: 9, number: "Dt", value: 10, revealed: false },
-    { id: 10, number: "Rt", value: 15, revealed: false },
-    { id: 11, number: "At", value: 20, revealed: false },
-    { id: 12, number: "Vc", value: 5, revealed: false },
-    { id: 13, number: "Dc", value: 10, revealed: false },
-    { id: 14, number: "Rc", value: 15, revealed: false },
-    { id: 15, number: "Ac", value: 20, revealed: false },
+    {
+        id: 0,
+        number: "Vt",
+        value: 5,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 1,
+        number: "Dt",
+        value: 10,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 2,
+        number: "Rt",
+        value: 15,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 3,
+        number: "At",
+        value: 20,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 4,
+        number: "Vc",
+        value: 5,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 5,
+        number: "Dc",
+        value: 10,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 6,
+        number: "Rc",
+        value: 15,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 7,
+        number: "Ac",
+        value: 20,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 8,
+        number: "Vt",
+        value: 5,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 9,
+        number: "Dt",
+        value: 10,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 10,
+        number: "Rt",
+        value: 15,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 11,
+        number: "At",
+        value: 20,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 12,
+        number: "Vc",
+        value: 5,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 13,
+        number: "Dc",
+        value: 10,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 14,
+        number: "Rc",
+        value: 15,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 15,
+        number: "Ac",
+        value: 20,
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
     {
         id: 16,
         number: "change",
         effect: ["change", "changeR"],
         revealed: false,
+        removed: false,
+        selectedBy: null,
     },
-    { id: 17, number: "vol", effect: ["vol", "volR"], revealed: false },
-    { id: 18, number: "garde", effect: ["garde", "gardeR"], revealed: false },
-    { id: 19, number: "voit", effect: ["voit", "voitR"], revealed: false },
+    {
+        id: 17,
+        number: "vol",
+        effect: ["vol", "volR"],
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 18,
+        number: "garde",
+        effect: ["garde", "gardeR"],
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
+    {
+        id: 19,
+        number: "voit",
+        effect: ["voit", "voitR"],
+        revealed: false,
+        removed: false,
+        selectedBy: null,
+    },
 ];
 
 //Mélange les cartes
@@ -64,7 +199,9 @@ const useDeckStore = create((set, get) => ({
         if (!card.revealed && flippedCards.length < 2 && !card.removed) {
             set((state) => ({
                 cards: state.cards.map((card) =>
-                    card.id === id ? { ...card, revealed: true } : card
+                    card.id === id
+                        ? { ...card, revealed: true, selectedBy: currentPlayer }
+                        : card
                 ),
                 flippedCards: [...state.flippedCards, id],
             }));
@@ -95,7 +232,11 @@ const useDeckStore = create((set, get) => ({
                             cards: state.cards.map((card) =>
                                 card.id === firstCardId ||
                                 card.id === secondCardId
-                                    ? { ...card, revealed: false }
+                                    ? {
+                                          ...card,
+                                          revealed: false,
+                                          selectedBy: null,
+                                      }
                                     : card
                             ),
                         }));
@@ -118,6 +259,7 @@ const useDeckStore = create((set, get) => ({
                 ...card,
                 revealed: false,
                 removed: false,
+                selectedBy: null,
             })),
             flippedCards: [],
         })),

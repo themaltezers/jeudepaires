@@ -1,12 +1,29 @@
 .card {
-    background: rgba(0, 0, 0, 0.5);
-
-    padding: 1em;
-
-    border-radius: 6px;
+    width: 100px;
+    height: 150px;
+    border: 2px solid transparent;
+    background: green;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
 }
+
+.borderRed {
+    border-color: red;
+}
+
+.borderBlue {
+    border-color: blue;
+}
+
+.revealed {
+    background-color: white;
+}
+
 .emptySpace {
-    width: 100px; // Ajustez en fonction de la taille de vos cartes
-    height: 150px; // Ajustez en fonction de la taille de vos cartes
-    background-color: transparent; // Pour s'assurer que l'espace est bien visible
+    width: 100px;
+    height: 150px;
+    background-color: transparent;
 }
