@@ -10,16 +10,23 @@ const Player = ({ playerId }) => {
     );
     const currentPlayer = usePlayerStore((state) => state.currentPlayer);
 
-    // Si le joueur n'existe pas, retourne null ou un composant de fallback
+    // Si le joueur n'existe pas, retourne un message d'erreur
     if (!player) {
         return <div className={styles.player}>Player not found</div>;
+    }
+
+    // Si la main du joueur n'est pas définie, éviter l'erreur
+    if (!player.hand) {
+        return (
+            <div className={styles.player}>Main du joueur non disponible</div>
+        );
     }
 
     return (
         <div className={styles.player}>
             <h2>Player: {player.name}</h2>
             <p>Points: {player.points}</p>
-            <Hand cards={player.hand} />
+            <Hand playerId={player.id} cards={player.hand} />
         </div>
     );
 };
