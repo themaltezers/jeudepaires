@@ -157,6 +157,7 @@ const cards = [
         removed: false,
         selectedBy: null,
         isSingle: true,
+        used: false,
     },
     {
         id: 17,
@@ -166,6 +167,7 @@ const cards = [
         removed: false,
         selectedBy: null,
         isSingle: true,
+        used: false,
     },
     {
         id: 18,
@@ -175,6 +177,7 @@ const cards = [
         removed: false,
         selectedBy: null,
         isSingle: true,
+        used: false,
     },
     {
         id: 19,
@@ -184,6 +187,7 @@ const cards = [
         removed: false,
         selectedBy: null,
         isSingle: true,
+        used: false,
     },
 ];
 
